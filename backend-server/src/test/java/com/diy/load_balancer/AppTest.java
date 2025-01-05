@@ -1,4 +1,4 @@
-package com.diy.be_server;
+package com.diy.load_balancer;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package com.diy.be_server;
+package com.diy.load_balancer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -14,15 +14,17 @@ public class BEServer
             int port = args.length>0?Integer.parseInt(args[0]):8081;
             log.info("STARTING Backend Server (Jetty Server) at port "+port);
 
+            //Servlets and Jetty Servers are multithreaded by default, so there is no need to implement multithreading on my own
             Server server = new Server(port);
             ServletContextHandler contextHandler = new ServletContextHandler();
-            contextHandler.addServlet(PingHandler.class, "/");
+            contextHandler.setAttribute("be.port",port);
+            contextHandler.addServlet(PingHandler.class, "/ping");
 
             server.setHandler(contextHandler);
             server.start();
             server.join();
         } catch(Exception e){
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }
