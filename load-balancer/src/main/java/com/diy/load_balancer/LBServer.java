@@ -18,6 +18,7 @@ public class LBServer
             //LBServer = http://localhost:8080
             //Default LBAlgo = Round Robin
             //BEServerList = ["http://localhost:8081"]
+            //health check interval = 10 seconds
             int port = args.length>0?Integer.parseInt(args[0]):8080;
             log.info("STARTING Load Balancer Frontend (Jetty Server) at port "+port);
             //Servlets and Jetty Servers are multithreaded by default, so there is no need to implement multithreading on my own
@@ -26,7 +27,9 @@ public class LBServer
 
             LBAlgoEnum selectedAlgo = args.length>1?LBAlgoEnum.valueOf(args[1]):LBAlgoEnum.ROUND_ROBIN;
             String backendServers = args.length>2?getCommaSeparatedBackendUrls(args[2]):"http://localhost:8081";
-            LBAlgo lbAlgo = new LBAlgo(selectedAlgo, backendServers);
+            Integer healthCheckInterval = args.length>3?Integer.parseInt(args[3]):10;
+
+            LBAlgo lbAlgo = new LBAlgo(selectedAlgo, backendServers, healthCheckInterval);
 
             contextHandler.setAttribute("lb.lbAlgo", lbAlgo);
             contextHandler.setAttribute("lb.port",port);

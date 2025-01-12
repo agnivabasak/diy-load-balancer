@@ -19,10 +19,11 @@ echo "Success"
 echo ""
 
 echo "Configuration from user: "
-if [ $# -lt 4 ]
+if [ $# -lt 5 ]
   then
-    echo "Please supply four arguments when executing the bash script!"
+    echo "Please supply five arguments when executing the bash script!"
 	echo "The arguments required (in order) are : load balancer port, first backend server port, number of backend servers, Load balancing algorithm(refer to README.md)"
+	echo "and then intervals (in seconds) for checking the health of the backend servers"
 	echo "If first backend server port is 8081, and number of backend servers are 3, then the ports of the be-servers would be 8081, 8082, 8083"
 	exit 1
 else 
@@ -30,6 +31,7 @@ else
 	echo "First backend server port: $2"
 	echo "Number of backend servers: $3"
 	echo "Load balancing algorithm: $4"
+	echo "Seconds of interval for Health Checks of the backend servers: $5"
 fi
 echo ""
 

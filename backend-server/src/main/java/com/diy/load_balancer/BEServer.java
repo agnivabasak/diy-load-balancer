@@ -19,6 +19,7 @@ public class BEServer
             ServletContextHandler contextHandler = new ServletContextHandler();
             contextHandler.setAttribute("be.port",port);
             contextHandler.addServlet(PingHandler.class, "/ping");
+            contextHandler.addServlet(HealthHandler.class, "/health");
 
             server.setHandler(contextHandler);
             server.start();

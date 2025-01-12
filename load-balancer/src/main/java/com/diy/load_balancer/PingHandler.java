@@ -44,6 +44,12 @@ public class PingHandler extends HttpServlet {
             log.info("Accept: " + req.getHeaders("Accept").nextElement());
 
             String backendUrl = lbAlgo.getNextServerUrl();
+            if(backendUrl==null){
+                log.error("No backend server available to forward the request to.");
+                resp.setStatus(HttpURLConnection.HTTP_INTERNAL_ERROR);
+                return;
+            }
+
             URL obj = new URL(backendUrl+"/ping");
             log.info("Forwarding request to : " + backendUrl);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
