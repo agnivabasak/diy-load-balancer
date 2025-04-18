@@ -10,8 +10,8 @@ echo "Success"
 echo ""
 
 echo "Checking if backend-server JAR exists"
-if [ ! -f ./load-balancer/target/lb-server-1.0.jar ]; then
-    echo "Load Balancer JAR not present in /load-balancer/target folder"
+if [ ! -f ./backend-server/target/be-server-1.0.jar ]; then
+    echo "Backend Server JAR not present in /backend-server/target folder"
 	echo "Please make sure you have run the setup.sh script before running the start.sh script"
 	exit 1
 fi
@@ -72,6 +72,17 @@ done
 echo "Started servers with PIDs: ${pids[@]}"
 echo ""
 
+echo "Saving the PIDs in a file (backendServerPids.txt)"
+echo ""
+echo "Creating backendServerPids.txt (if it doesn't exist) or emptying the contents(if it does exist)"
+cat /dev/null>backendServerPids.txt
+for (( i=0; i<$3; i++ ));
+do
+  echo "$(($2+$i)),${pids[$i]}">>backendServerPids.txt
+done
+echo "Success"
+echo ""
+
 echo "Starting the load balancer in port $1"
-java -jar ./load-balancer/target/lb-server-1.0.jar $1 $4 "$file_path"
+java -jar ./load-balancer/target/lb-server-1.0.jar $1 $4 "$file_path" $5
 

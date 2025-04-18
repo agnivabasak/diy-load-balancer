@@ -10,7 +10,6 @@ if [ $# -lt 3 ]
     echo "Please supply three arguments when executing the bash script!"
 	echo "The arguments required (in order) are : load balancer port, number of requests to the load balancer and"
 	echo "number of concurrent requests (parallel requests/requests sent at the same time) to the load balancer "
-	echo "and then intervals (in seconds) for checking the health of the backend servers"
 	exit 1
 else 
 	echo "Load balancer port: $1"
@@ -24,9 +23,11 @@ echo "Creating curl config file (curl-test-urls.txt) (if it doesn't exist) or em
 cat /dev/null>curl-test-urls.txt
 echo "Entering the details into curl-test-urls.txt..."
 urlConfig="url = \"http://localhost:$1/ping\""
+outputConfig="output = \"-\""
 for((i=1;i<=$2;i++));
 do
 	echo $urlConfig>>curl-test-urls.txt
+	echo $outputConfig>>curl-test-urls.txt
 done
 echo "Success"
 
