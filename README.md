@@ -1,11 +1,17 @@
 # diy-load-balancer
 A simple load balancer made for learning the internals of how a layer 7 lb works
-<br><br>This project is developed in Java using **Jetty servers** as backend instances. 
-<br><br>The load balancer distributes traffic in a **ROUND_ROBIN** fashion, supports periodic health checks, and includes shell scripts to manage setup, testing, teardown, and chaos testing.
+
+## Flow of the application
+
+1. The user sends a request to the load balancer
+2. The load balancer receives the requests using a Jetty Server, which is multi-threaded by default.
+3. In the background, health checks are performed in intervals, where the /health endpoint of the backend servers are hit. If any of them don't resond as expected, they are removed from the list of healthy servers. If they come back up, they are added back to the list of healthy servers.
+   <br>Using thread safe data structures like CopyOnWriteArrayList and synchronized functions, it is made sure that a request is not served in the middle of a health check and there is no discrepancy in the list used for selecting the backend server.
+4. The load balancer selects one of the backend server in a Round Robin fashion. It then forwards the request by hitting the /ping endpoint of the backend server and returns the response received by the backend server. Before sending the request to the backend server, the load balancer also sets proxy headers like "X-Forwarded-For","X-Forwarded-Host",etc.
 
 ## Steps to test
 
-Shell scripts are  provided for ease of setting up the servers for testing. Alternatively, they can be manually spun up as well as you would a Java Jetty Server (The shell scripts can be used as reference to figure out the exact commands)
+Shell scripts are  provided for ease of setting up the servers for testing. Alternatively, they can be manually spun up as well, as you would a Java Jetty Server (The shell scripts can be used as reference to figure out the exact commands)
 <br><br> Please execute the commands listed in the root directory of the project
 
 ### Prerequisites:
@@ -82,3 +88,6 @@ At the end, it also updates the file to hold the current pids of the be-servers.
 
 To stop the load balancer just press `CTRL-C` in the terminal that we used to execute the start.sh script.
 <br>To stop the backend servers execute `./stop.sh`. This will use the pids stored in backendServerPids.txt and stop those processes, in case they already aren't.
+
+## Issues or bugs in the tool? Want to add a new functionality?
+Contributions are always welcome. You could open up an issue if you feel like something is wrong with the tool or a PR if you just want to improve it.
